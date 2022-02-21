@@ -7,8 +7,8 @@ const userSchema = new mongoose.Schema(
     pseudo: {
       type: String,
       required: true,
-      minLength: 3,
-      maxLength: 55,
+      minlength: 3,
+      maxlength: 55,
       unique: true,
       trim: true
     },
@@ -24,15 +24,16 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       max: 1024,
-      minlength: 6
+      minlength: 10
     },
     picture: {
       type: String,
       default: "./uploads/profil/random-user.png"
     },
-    bio :{
+    bio:{
       type: String,
       max: 1024,
+      default: ""
     },
     followers: {
       type: [String]
@@ -55,6 +56,20 @@ userSchema.pre("save", async function(next) {
   this.password = await bcrypt.hash(this.password, salt)
   next()
 })
+
+// verify the login appel
+userSchema.statics.login = async function(email, password) {
+  console.log("login")
+  const user = await this.findOne({ email })
+  if (user) {
+    const auth = await bcrypt.compare(password, user.password)
+    if (auth) {
+      return user
+    }
+    throw Error('Incorrect password')
+  }
+  throw Error('Incorrect email')
+}
 
 const userModel = mongoose.model("user", userSchema)
 
