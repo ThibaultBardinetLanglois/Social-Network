@@ -8,14 +8,14 @@ module.exports.checkUser = (req, res, next) => {
     jwt.verify(token, process.env.SERVER_SECRET, async (err, decodedToken) => {
       if (err) {
         res.locals.user = null
-        res.clearCookie('socialNetworkMERN')
+        //res.clearCookie('socialNetworkMERN')
         next()
       }
       else {
         console.log("DECODED TOKEN FOR CHECK USER =>", decodedToken)
         let user = await UserModel.findById(decodedToken.id)
         res.locals.user = user
-        console.log("USER =>", user)
+        console.log("RES.LOCALS =>", res.locals)
         next()
       }
     })

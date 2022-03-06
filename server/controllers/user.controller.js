@@ -9,6 +9,7 @@ module.exports.getAllUsers = async (req, res) => {
 
 module.exports.userInfo = async (req, res) => {
   console.log(req.params)
+  console.log("USER INFOS !!")
   // If the id is not known from the db
   if (!ObjectID.isValid(req.params.id)) {
     res.status(400).send('ID unknown: ' + req.params.id)

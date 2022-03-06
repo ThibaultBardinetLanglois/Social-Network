@@ -1,6 +1,6 @@
 module.exports.signUpErrors = (err) => {
   let errors = { pseudo: '', email: '', password: '' }
-
+  console.log("ERR MESSAGE =>", err.message)
   if(err.message.includes("pseudo"))
     errors.pseudo = "Le pseudo doit contenir au moins 3 caractères"
   
@@ -29,7 +29,7 @@ module.exports.signInErrors = (err) => {
     errors.email = `Email (${err.keyValue.email}) déjà enregistré`
 
   if (err.message.includes("password")) 
-    errors.password = "Le mot de passe doit au moins avoir 10 caractères"
+    errors.password = "Le mot de passe est incorrect"
 
   return errors
 }

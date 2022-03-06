@@ -5,6 +5,16 @@ const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
 
+require('dotenv').config({path: './config/.env'})
+require('./config/db')
+const { checkUser, requireAuth } = require('./middleware/auth.middleware')
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(cookieParser())
+app.use(express.static(__dirname + '/public'));
+
+// we use cors module to authorize external request to our server, from the front for example
 const corsOptions = {
   origin: process.env.CLIENT_URL,
   credentials: true,
@@ -13,17 +23,7 @@ const corsOptions = {
   'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
   'preflightContinue': false
 }
-
-require('dotenv').config({path: './config/.env'})
-require('./config/db')
-const { checkUser, requireAuth } = require('./middleware/auth.middleware')
-
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(cookieParser())
-app.use(cors(corsOptions))
-// we use cors module to authorize external request to our server, from the front for example
-
+app.use(cors(corsOptions));
 
 const userRoutes = require('./routes/user.routes.js')
 const postRoutes = require('./routes/post.routes')

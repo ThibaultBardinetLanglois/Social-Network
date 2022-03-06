@@ -24,20 +24,26 @@ module.exports.signUp = async (req, res) => {
 }
 
 module.exports.signIn = async (req, res) => {
-  console.log('REQ BODY USER REGISTER => ',req.body)
+  console.log('REQ BODY USER LOGIN => ',req.body)
   const { email, password } = req.body
   try {
     await UserModel.login(email, password)
     .then(user => {
       const token = createToken(user._id)
-      res.cookie('socialNetworkMERN', token, { httpOnly: true, maxAge: maxAge })
-      res.status(200).json({ user: user._id })
+      console.log("COOL!!")
+      res
+        .status(200)
+        .cookie('socialNetworkMERN', token, { 
+          httpOnly: true, 
+          maxAge: maxAge, 
+          secure: false,
+        }).send({ user: user._id })
     })
     
   }
   catch (err) {
     const errors = signInErrors(err)
-    res.status(500).json({ errors })
+    res.status(500).send({ errors })
   }
 }
 
